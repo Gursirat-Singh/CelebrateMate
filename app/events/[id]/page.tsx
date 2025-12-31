@@ -67,12 +67,13 @@ export default function EventDetailPage() {
       case 'celebratory':
         return {
           accentColor: 'rose',
-          bgGradient: 'from-rose-50 via-white to-pink-50',
-          cardBg: 'from-rose-50/80 to-pink-50/60',
-          badgeBg: 'bg-rose-100 text-rose-700 border-rose-200',
-          buttonPrimary: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700',
-          buttonSecondary: 'border-rose-200 text-rose-700 hover:bg-rose-50',
-          tabActive: 'data-[state=active]:bg-rose-100 data-[state=active]:text-rose-700',
+          bgGradient: 'from-rose-50 via-white to-pink-50 dark:from-rose-900/20 dark:via-gray-900 dark:to-pink-900/15',
+          cardBg: 'from-rose-50/80 to-pink-50/60 dark:from-rose-900/30 dark:to-pink-900/20',
+          badgeBg: 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/50 dark:text-rose-300 dark:border-rose-800',
+          buttonPrimary: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 dark:from-rose-600 dark:to-rose-700 dark:hover:from-rose-700 dark:hover:to-rose-800',
+          buttonSecondary: 'border-rose-200 text-rose-700 hover:bg-rose-50 dark:border-rose-700 dark:text-rose-300 dark:hover:bg-rose-900/20',
+          tabActive: 'data-[state=active]:bg-rose-100 data-[state=active]:text-rose-700 dark:data-[state=active]:bg-rose-900/30 dark:data-[state=active]:text-rose-300',
+          headerBg: 'bg-white/80 dark:bg-gray-900/80',
           allowAnimations: true,
           roundedCorners: true,
           showCards: true,
@@ -82,12 +83,13 @@ export default function EventDetailPage() {
       case 'supportive':
         return {
           accentColor: 'blue',
-          bgGradient: 'from-blue-50 via-white to-indigo-50',
-          cardBg: 'from-blue-50/60 to-indigo-50/40',
-          badgeBg: 'bg-blue-100 text-blue-700 border-blue-200',
-          buttonPrimary: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-          buttonSecondary: 'border-blue-200 text-blue-700 hover:bg-blue-50',
-          tabActive: 'data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700',
+          bgGradient: 'from-blue-50 via-white to-indigo-50 dark:from-blue-900/15 dark:via-gray-900 dark:to-indigo-900/10',
+          cardBg: 'from-blue-50/60 to-indigo-50/40 dark:from-blue-900/25 dark:to-indigo-900/15',
+          badgeBg: 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800',
+          buttonPrimary: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800',
+          buttonSecondary: 'border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20',
+          tabActive: 'data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 dark:data-[state=active]:bg-blue-900/30 dark:data-[state=active]:text-blue-300',
+          headerBg: 'bg-white/80 dark:bg-gray-900/80',
           allowAnimations: false,
           roundedCorners: true,
           showCards: true,
@@ -97,12 +99,13 @@ export default function EventDetailPage() {
       case 'remembrance':
         return {
           accentColor: 'gray',
-          bgGradient: 'from-gray-50 via-white to-slate-50',
-          cardBg: 'from-gray-50/50 to-slate-50/40',
-          badgeBg: 'bg-gray-100 text-gray-700 border-gray-200',
-          buttonPrimary: 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700',
-          buttonSecondary: 'border-gray-200 text-gray-700 hover:bg-gray-50',
-          tabActive: 'data-[state=active]:bg-gray-100 data-[state=active]:text-gray-700',
+          bgGradient: 'from-gray-50 via-white to-slate-50 dark:from-gray-800/30 dark:via-gray-900 dark:to-slate-800/25',
+          cardBg: 'from-gray-50/50 to-slate-50/40 dark:from-gray-800/40 dark:to-slate-800/30',
+          badgeBg: 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800/50 dark:text-gray-300 dark:border-gray-700',
+          buttonPrimary: 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 dark:from-gray-600 dark:to-gray-700 dark:hover:from-gray-700 dark:hover:to-gray-800',
+          buttonSecondary: 'border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800/20',
+          tabActive: 'data-[state=active]:bg-gray-100 data-[state=active]:text-gray-700 dark:data-[state=active]:bg-gray-800/30 dark:data-[state=active]:text-gray-300',
+          headerBg: 'bg-white/80 dark:bg-gray-900/80',
           allowAnimations: false,
           roundedCorners: false,
           showCards: false,
@@ -112,12 +115,13 @@ export default function EventDetailPage() {
       case 'practical':
         return {
           accentColor: 'emerald',
-          bgGradient: 'from-white via-gray-50 to-white',
-          cardBg: 'from-white to-gray-50/30',
-          badgeBg: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-          buttonPrimary: 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
-          buttonSecondary: 'border-emerald-200 text-emerald-700 hover:bg-emerald-50',
-          tabActive: 'data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700',
+          bgGradient: 'from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900',
+          cardBg: 'from-white to-gray-50/30 dark:from-gray-800 dark:to-gray-700/50',
+          badgeBg: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:border-emerald-800',
+          buttonPrimary: 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 dark:from-emerald-600 dark:to-emerald-700 dark:hover:from-emerald-700 dark:hover:to-emerald-800',
+          buttonSecondary: 'border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-700 dark:text-emerald-300 dark:hover:bg-emerald-900/20',
+          tabActive: 'data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-700 dark:data-[state=active]:bg-emerald-900/30 dark:data-[state=active]:text-emerald-300',
+          headerBg: 'bg-white/80 dark:bg-gray-900/80',
           allowAnimations: false,
           roundedCorners: false,
           showCards: true,
@@ -127,12 +131,13 @@ export default function EventDetailPage() {
       default:
         return {
           accentColor: 'rose',
-          bgGradient: 'from-rose-50 via-white to-amber-50',
-          cardBg: 'from-rose-50/80 to-pink-50/60',
-          badgeBg: 'bg-rose-100 text-rose-700 border-rose-200',
-          buttonPrimary: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700',
-          buttonSecondary: 'border-rose-200 text-rose-700 hover:bg-rose-50',
-          tabActive: 'data-[state=active]:bg-rose-100 data-[state=active]:text-rose-700',
+          bgGradient: 'from-rose-50 via-white to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900',
+          cardBg: 'from-rose-50/80 to-pink-50/60 dark:from-gray-800 dark:to-gray-700',
+          badgeBg: 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/50 dark:text-rose-300 dark:border-rose-800',
+          buttonPrimary: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 dark:from-rose-600 dark:to-rose-700 dark:hover:from-rose-700 dark:hover:to-rose-800',
+          buttonSecondary: 'border-rose-200 text-rose-700 hover:bg-rose-50 dark:border-rose-700 dark:text-rose-300 dark:hover:bg-rose-900/20',
+          tabActive: 'data-[state=active]:bg-rose-100 data-[state=active]:text-rose-700 dark:data-[state=active]:bg-rose-900/30 dark:data-[state=active]:text-rose-300',
+          headerBg: 'bg-white/80 dark:bg-gray-900/80',
           allowAnimations: true,
           roundedCorners: true,
           showCards: true,
@@ -233,11 +238,11 @@ export default function EventDetailPage() {
   return (
     <div className={`min-h-screen bg-gradient-to-br ${toneConfig.bgGradient} ${toneConfig.allowAnimations ? 'transition-colors duration-500' : ''}`}>
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className={`border-b ${toneConfig.headerBg} backdrop-blur-sm`}>
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Heart className={`h-6 w-6 text-${toneConfig.accentColor}-500`} fill="currentColor" />
-            <span className="text-xl font-semibold">CelebrateMate</span>
+            <Heart className={`h-6 w-6 text-${toneConfig.accentColor}-500 dark:text-${toneConfig.accentColor}-400`} fill="currentColor" />
+            <span className="text-xl font-semibold text-gray-900 dark:text-white">CelebrateMate</span>
           </Link>
           <Button variant="ghost" asChild className={toneConfig.buttonSecondary}>
             <Link href="/dashboard">
@@ -455,13 +460,13 @@ export default function EventDetailPage() {
                       </p>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
-                      <div className={`p-4 border ${toneConfig.roundedCorners ? 'rounded-lg' : 'rounded-md'} bg-white/50`}>
+                      <div className={`p-4 border ${toneConfig.roundedCorners ? 'rounded-lg' : 'rounded-md'} bg-white/50 dark:bg-gray-800/50`}>
                         <h4 className="font-medium mb-2">📞 Reach Out</h4>
-                        <p className="text-sm text-muted-foreground">A simple call or message can mean the world</p>
+                        <p className="text-sm text-muted-foreground dark:text-gray-300">A simple call or message can mean the world</p>
                       </div>
-                      <div className={`p-4 border ${toneConfig.roundedCorners ? 'rounded-lg' : 'rounded-md'} bg-white/50`}>
+                      <div className={`p-4 border ${toneConfig.roundedCorners ? 'rounded-lg' : 'rounded-md'} bg-white/50 dark:bg-gray-800/50`}>
                         <h4 className="font-medium mb-2">🤝 Be Present</h4>
-                        <p className="text-sm text-muted-foreground">Sometimes just being there is the greatest gift</p>
+                        <p className="text-sm text-muted-foreground dark:text-gray-300">Sometimes just being there is the greatest gift</p>
                       </div>
                     </div>
                   </div>
