@@ -85,12 +85,12 @@ export default function Navbar() {
 
           {/* Theme Toggle & User Menu / Auth */}
           <div className="flex items-center gap-4">
-            {/* Theme Toggle */}
+            {/* Theme Toggle - Available on all screen sizes */}
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="hidden sm:flex hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="hover:bg-gray-100 dark:hover:bg-gray-800"
               title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
             >
               {isDarkMode ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5 text-slate-600 dark:text-slate-300" />}
@@ -154,6 +154,20 @@ export default function Navbar() {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-border pt-4">
+            {/* Mobile Theme Toggle */}
+            <div className="flex items-center justify-between px-3 py-2 mb-4">
+              <span className="text-sm font-medium text-foreground">Theme</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTheme}
+                className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                {isDarkMode ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4 text-slate-600 dark:text-slate-300" />}
+                <span className="text-sm">{isDarkMode ? "Light" : "Dark"}</span>
+              </Button>
+            </div>
+
             <nav className="flex flex-col gap-2">
               {navItems.map((item) => (
                 <Link
