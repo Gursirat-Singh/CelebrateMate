@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
-import { Heart, ArrowLeft, Calendar, Gift, MessageSquare, Edit2, Sparkles, ThumbsUp, ThumbsDown } from "lucide-react"
+import { Heart, ArrowLeft, Calendar, Gift, MessageSquare, Edit2, Sparkles, ThumbsUp, ThumbsDown, Sun, Moon } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function EventDetailPage() {
@@ -176,6 +176,24 @@ export default function EventDetailPage() {
   const [generatedMessage, setGeneratedMessage] = useState(toneMessages[0])
   const [isEditing, setIsEditing] = useState(false)
   const [feedback, setFeedback] = useState<"like" | "dislike" | null>(null)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // Theme management
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("celebratemate_theme")
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    const shouldBeDark = savedTheme === "dark" || (!savedTheme && prefersDark)
+
+    setIsDarkMode(shouldBeDark)
+    document.documentElement.classList.toggle("dark", shouldBeDark)
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode
+    setIsDarkMode(newTheme)
+    document.documentElement.classList.toggle("dark", newTheme)
+    localStorage.setItem("celebratemate_theme", newTheme ? "dark" : "light")
+  }
 
   const suggestedCards = [
     {
@@ -519,6 +537,22 @@ export default function EventDetailPage() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Floating Theme Toggle Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Button
+          onClick={toggleTheme}
+          size="icon"
+          className={`h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ${
+            isDarkMode
+              ? 'bg-yellow-500 hover:bg-yellow-600 text-yellow-900'
+              : 'bg-slate-800 hover:bg-slate-900 text-slate-100'
+          }`}
+          title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {isDarkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+        </Button>
+      </div>
     </div>
   )
 }
