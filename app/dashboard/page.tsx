@@ -7,72 +7,83 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Heart, Plus, Calendar, User, MessageSquare, Sparkles } from "lucide-react"
+import { Heart, Plus, Calendar, User, MessageSquare, Sparkles, Loader2, X, Bell } from "lucide-react"
 import Navbar from "@/components/navbar"
+import { apiClient } from "@/lib/api"
+import { useToast } from "@/hooks/use-toast"
+
+interface BackendEvent {
+  _id: string
+  title: string
+  eventType: 'birthday' | 'anniversary' | 'custom'
+  tone: 'celebratory' | 'supportive' | 'remembrance' | 'practical'
+  eventDate: string
+  personName: string
+  description?: string
+  reminderDaysBefore: number
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
 
 interface Event {
   id: string
   personName: string
   eventType: string
-  eventTone?: 'celebratory' | 'supportive' | 'remembrance' | 'practical'
+  eventTone: 'celebratory' | 'supportive' | 'remembrance' | 'practical'
   date: string
   daysUntil: number
   description?: string
-  status?: "upcoming" | "prepared"
+  status: "upcoming" | "prepared"
 }
 
 export default function DashboardPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [user, setUser] = useState<{ name: string; email: string } | null>(null)
+  const [events, setEvents] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [viewMode, setViewMode] = useState<"timeline" | "calendar">("timeline")
   const [currentTime, setCurrentTime] = useState(new Date())
 
-  // Mock events data
-  const upcomingEvents: Event[] = [
-    {
-      id: "1",
-      personName: "Sarah Johnson",
-      eventType: "Birthday",
-      eventTone: "celebratory",
-      date: "2025-01-15",
-      daysUntil: 15,
-      description: "Mom's 65th birthday - planning a family dinner",
-      status: "upcoming"
-    },
-    {
-      id: "2",
-      personName: "Mark & Lisa",
-      eventType: "Anniversary",
-      eventTone: "remembrance",
-      date: "2025-01-22",
-      daysUntil: 22,
-      description: "Remembering our beloved grandmother's passing anniversary",
-      status: "prepared"
-    },
-    {
-      id: "3",
-      personName: "David Chen",
-      eventType: "Birthday",
-      eventTone: "practical",
-      date: "2025-02-03",
-      daysUntil: 34,
-      description: "Colleague's birthday - send a card reminder",
-      status: "upcoming"
-    },
-    {
-      id: "4",
-      personName: "John Smith",
-      eventType: "Memorial",
-      eventTone: "remembrance",
-      date: "2025-01-28",
-      daysUntil: 28,
-      description: "Remembering Dad's passing - family gathering",
-      status: "upcoming"
-    },
-  ]
 
-  const recentlyPrepared = upcomingEvents.filter(event => event.status === "prepared")
-  const nextImportantEvent = upcomingEvents.find(event => event.status === "upcoming") || upcomingEvents[0]
+
+  // Fetch events from backend
+  const fetchEvents = async () => {
+    try {
+      const backendEvents: BackendEvent[] = await apiClient.getEvents()
+
+      // Transform backend events to frontend format
+      const transformedEvents: Event[] = backendEvents.map(event => {
+        const eventDate = new Date(event.eventDate)
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const diffTime = eventDate.getTime() - today.getTime()
+        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+        return {
+          id: event._id,
+          personName: event.personName,
+          eventType: event.eventType.charAt(0).toUpperCase() + event.eventType.slice(1),
+          eventTone: event.tone,
+          date: event.eventDate,
+          daysUntil: daysUntil,
+          description: event.description || event.title,
+          status: "upcoming" as const // For now, all are upcoming
+        }
+      })
+
+      setEvents(transformedEvents)
+    } catch (err: any) {
+      setError(err.message || "Failed to load events")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const recentlyPrepared = events.filter(event => event.status === "prepared")
+  const nextImportantEvent = events.find(event => event.status === "upcoming") || events[0]
 
   // Get greeting based on time of day
   const getGreeting = () => {
@@ -82,12 +93,15 @@ export default function DashboardPage() {
     return "Good evening"
   }
 
+
+
   useEffect(() => {
     const storedUser = localStorage.getItem("celebratemate_user")
     if (!storedUser) {
       router.push("/auth")
     } else {
       setUser(JSON.parse(storedUser))
+      fetchEvents() // Fetch events when user is loaded
     }
   }, [router])
 
@@ -184,7 +198,7 @@ export default function DashboardPage() {
             <Card className="border-0 shadow-sm bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/20 dark:to-rose-800/20">
               <CardContent className="p-6 text-center">
                 <Heart className="h-8 w-8 mx-auto mb-3 text-rose-600 dark:text-rose-400" />
-                <div className="text-3xl font-bold text-rose-700 dark:text-rose-300 mb-1">{upcomingEvents.length}</div>
+                <div className="text-3xl font-bold text-rose-700 dark:text-rose-300 mb-1">{events.length}</div>
                 <div className="text-sm text-rose-600 dark:text-rose-400 font-medium">Total Events</div>
                 <div className="text-xs text-rose-500 dark:text-rose-400 mt-1">This month</div>
               </CardContent>
@@ -193,7 +207,7 @@ export default function DashboardPage() {
             <Card className="border-0 shadow-sm bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20">
               <CardContent className="p-6 text-center">
                 <Calendar className="h-8 w-8 mx-auto mb-3 text-amber-600 dark:text-amber-400" />
-                <div className="text-3xl font-bold text-amber-700 dark:text-amber-300 mb-1">{upcomingEvents.filter(e => e.daysUntil <= 7).length}</div>
+                <div className="text-3xl font-bold text-amber-700 dark:text-amber-300 mb-1">{events.filter(e => e.daysUntil <= 7).length}</div>
                 <div className="text-sm text-amber-600 dark:text-amber-400 font-medium">This Week</div>
                 <div className="text-xs text-amber-500 dark:text-amber-400 mt-1">Urgent</div>
               </CardContent>
@@ -203,7 +217,7 @@ export default function DashboardPage() {
               <CardContent className="p-6 text-center">
                 <User className="h-8 w-8 mx-auto mb-3 text-emerald-600 dark:text-emerald-400" />
                 <div className="text-3xl font-bold text-emerald-700 dark:text-emerald-300 mb-1">
-                  {new Set(upcomingEvents.map(e => e.personName)).size}
+                  {new Set(events.map(e => e.personName)).size}
                 </div>
                 <div className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">People</div>
                 <div className="text-xs text-emerald-500 dark:text-emerald-400 mt-1">In your life</div>
@@ -233,7 +247,24 @@ export default function DashboardPage() {
             </Button>
           </div>
 
-          {recentlyPrepared.length > 0 ? (
+          {events.length === 0 ? (
+            <Card className="border-0 shadow-sm bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">Nothing prepared yet</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">Start preparing for your upcoming celebrations</p>
+                <Button
+                  className="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700"
+                  onClick={() => router.push("/events/new")}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Your First Event
+                </Button>
+              </CardContent>
+            </Card>
+          ) : recentlyPrepared.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recentlyPrepared.map((event) => (
                 <Card key={event.id} className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-white dark:from-green-900/10 dark:to-gray-800">
@@ -260,16 +291,19 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700">
+            <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-white dark:from-blue-800/50 dark:to-gray-700">
               <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-600 dark:to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Plus className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">Nothing prepared yet</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Start preparing for your upcoming celebrations</p>
-                <Button className="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700">
+                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">Ready to add more celebrations?</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">Keep building your collection of special moments</p>
+                <Button
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                  onClick={() => router.push("/events/new")}
+                >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Your First Event
+                  Add More Events
                 </Button>
               </CardContent>
             </Card>
@@ -284,15 +318,13 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            <Card className="group border-0 shadow-sm hover:shadow-lg bg-gradient-to-br from-rose-50/50 to-white dark:from-gray-800 dark:to-gray-700 transition-all duration-300 hover:-translate-y-1">
+            <Card className="group border-0 shadow-sm hover:shadow-lg bg-gradient-to-br from-rose-50/50 to-white dark:from-gray-800 dark:to-gray-700 transition-all duration-300 hover:-translate-y-1 cursor-pointer" onClick={() => router.push("/events/new")}>
               <CardContent className="p-6 text-center">
-                <Link href="/events/new" className="block">
-                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-rose-100 to-rose-200 dark:from-rose-900 dark:to-rose-800 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Plus className="h-7 w-7 text-rose-600 dark:text-rose-300" />
-                  </div>
-                  <h3 className="text-base font-semibold text-gray-800 dark:text-white mb-1">Add Event</h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Create new celebration</p>
-                </Link>
+                <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-rose-100 to-rose-200 dark:from-rose-900 dark:to-rose-800 rounded-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Plus className="h-7 w-7 text-rose-600 dark:text-rose-300" />
+                </div>
+                <h3 className="text-base font-semibold text-gray-800 dark:text-white mb-1">Add Event</h3>
+                <p className="text-xs text-gray-600 dark:text-gray-400">Create new celebration</p>
               </CardContent>
             </Card>
 
@@ -365,7 +397,7 @@ export default function DashboardPage() {
 
           {viewMode === "timeline" && (
             <div className="space-y-6">
-              {upcomingEvents.map((event, index) => {
+              {events.map((event, index) => {
                 const getToneStyling = () => {
                   switch (event.eventTone) {
                     case 'celebratory':
@@ -528,6 +560,8 @@ export default function DashboardPage() {
           )}
         </div>
       </main>
+
+
     </div>
   )
 }

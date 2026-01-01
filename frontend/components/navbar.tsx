@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { apiClient } from "@/lib/api"
 
 const navItems = [
   { href: "/", label: "Home", icon: Heart },
@@ -53,6 +54,7 @@ export default function Navbar() {
   }
 
   const handleLogout = () => {
+    apiClient.logout()
     localStorage.removeItem("celebratemate_user")
     setUser(null)
     router.push("/")
